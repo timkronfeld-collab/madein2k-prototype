@@ -5,541 +5,715 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<title>madein2k — Website (Fable 5 Prototype)</title>
+<title>madein2k — Website (Fusion v3)</title>
+
 <style>
-  /* ============ tokens ============ */
-  :root{
-    --ink:#0b0c0e;            /* near-black, cool */
-    --paper:#f3f4f6;          /* off-white, faint cool bias */
-    --ink-dim:rgba(11,12,14,.6);
-    --paper-dim:rgba(243,244,246,.62);
-    --line-ink:rgba(11,12,14,.16);
-    --line-paper:rgba(243,244,246,.2);
-    --gap:24px;
-    --font:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
-    --ease:cubic-bezier(.22,.61,.21,1);
+/* ==========================================================================
+   madein2k — Fusion v3 ("same content, half as loud")
+   Predominantly light, one continuous flow. Strict black & white.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  background: #ffffff;
+  color: #111111;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg, video, canvas { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+ul { list-style: none; }
+
+:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.container {
+  max-width: 1140px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+/* ---- Prototype ribbon (quiet) ------------------------------------------ */
+
+.ribbon {
+  position: relative;
+  background: #f6f6f6;
+  color: #6f6f6f;
+  font-size: 12px;
+  letter-spacing: .02em;
+  text-align: center;
+  padding: 9px 48px;
+  border-bottom: 1px solid #ececec;
+}
+.ribbon__close {
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  line-height: 1;
+  font-size: 16px;
+  color: #8a8a8a;
+  border-radius: 50%;
+}
+.ribbon__close:hover { color: #111111; }
+
+/* ---- Nav ---------------------------------------------------------------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, .92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #efefef;
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-block: 16px;
+}
+.wordmark {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.6vw, 30px);
+}
+.nav__links a {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #6f6f6f;
+  padding-block: 4px;
+}
+.nav__links a:hover { color: #111111; }
+
+/* forever pill — understated */
+.forever {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  border: 1px solid #dcdcdc;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  letter-spacing: .06em;
+  color: #444444;
+  transition: border-color .25s ease, color .25s ease;
+  white-space: nowrap;
+}
+.forever:hover { border-color: #111111; color: #111111; }
+.forever.playing { border-color: #111111; color: #111111; }
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+.eq span {
+  width: 2px;
+  height: 4px;
+  background: currentColor;
+  transform-origin: bottom;
+}
+.eq span:nth-child(2) { height: 9px; }
+.eq span:nth-child(3) { height: 6px; }
+.forever.playing .eq span { animation: eqPulse .45s ease-in-out infinite alternate; }
+.forever.playing .eq span:nth-child(2) { animation-delay: .1s; }
+.forever.playing .eq span:nth-child(3) { animation-delay: .2s; }
+@keyframes eqPulse {
+  from { transform: scaleY(.35); }
+  to   { transform: scaleY(1.5); }
+}
+
+/* ---- Section rhythm: airy, one continuous flow --------------------------- */
+
+.section { padding-block: clamp(4.5rem, 11vw, 8.5rem); scroll-margin-top: 76px; }
+.section + .section { padding-top: 0; }
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: #8f8f8f;
+}
+
+/* ---- ABOUT: portrait blended into the text -------------------------------- */
+
+.about .label { margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+
+.about-comp {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
+}
+.portrait {
+  grid-column: 5 / 13;
+  grid-row: 1;
+  position: relative;
+}
+.portrait svg { width: 100%; height: auto; }
+.portrait__tag {
+  position: absolute;
+  right: 6%;
+  top: 7%;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #b8b8b8;
+}
+.about-text {
+  grid-column: 1 / 8;
+  grid-row: 1;
+  z-index: 1;
+}
+.about-copy {
+  font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -.015em;
+  line-height: 1.5;
+  max-width: 21em;
+}
+.about-stats {
+  margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #8f8f8f;
+}
+
+@media (max-width: 760px) {
+  .about-comp { display: block; }
+  .portrait { max-width: 460px; margin-inline: auto; }
+  .about-text { position: relative; margin-top: -22%; }
+}
+
+/* ---- SELECTED CREDITS: the swipe carousel (calm chrome) -------------------- */
+
+.credits-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(1.6rem, 3.5vw, 2.6rem);
+}
+.credits-ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.ccount {
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: #a3a3a3;
+  font-variant-numeric: tabular-nums;
+  min-width: 42px;
+  text-align: center;
+}
+.cbtn {
+  width: 34px; height: 34px;
+  border: 1px solid #dcdcdc;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #444444;
+  transition: border-color .25s ease, color .25s ease, opacity .25s ease;
+}
+.cbtn:hover:not(:disabled) { border-color: #111111; color: #111111; }
+.cbtn:disabled { opacity: .3; cursor: default; }
+
+.credits-track {
+  display: flex;
+  gap: clamp(16px, 2.6vw, 28px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: none;
+}
+.credits-track::-webkit-scrollbar { display: none; }
+.credits-track.dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.credit {
+  flex: 0 0 auto;
+  width: min(300px, 68vw);
+  scroll-snap-align: start;
+}
+.cover {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #ececec;
+  background: #ffffff;
+  overflow: hidden;
+}
+.cover svg { width: 100%; height: 100%; }
+.cover .ph {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #a8a8a8;
+  pointer-events: none;
+}
+/* titles sit BELOW covers — never clipped */
+.credit figcaption { padding-top: 14px; }
+.credit__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.credit__artist {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #8f8f8f;
+}
+.credits-hint {
+  margin-top: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: #b0b0b0;
+}
+
+/* ---- DRUM KITS: one product, simple ---------------------------------------- */
+
+.kit .label { margin-bottom: clamp(1.6rem, 3.5vw, 2.6rem); }
+.kit-row {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+.kit-cover {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #0c0c0c;
+  overflow: hidden;
+}
+.kit-cover svg { width: 100%; height: 100%; }
+.kit-cover .ph {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  pointer-events: none;
+}
+.kit__title {
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.kit__desc {
+  margin-top: 12px;
+  max-width: 42ch;
+  color: #555555;
+  font-size: 15px;
+}
+.kit__price {
+  margin-top: 18px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.kit__cta {
+  display: inline-block;
+  margin-top: 22px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 15px 28px;
+  transition: background .25s ease;
+}
+.kit__cta:hover { background: #333333; }
+.kit__note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #9a9a9a;
+}
+
+@media (max-width: 700px) {
+  .kit-row { grid-template-columns: 1fr; }
+  .kit-cover { max-width: 340px; }
+}
+
+/* ---- CONTACT: the one big typographic moment -------------------------------- */
+
+.contact .label { margin-bottom: clamp(1.8rem, 4vw, 3rem); }
+.display {
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 7.25rem);
+  line-height: .95;
+  letter-spacing: -.04em;
+  transform: scaleX(.9);
+  transform-origin: left;
+  text-transform: uppercase;
+}
+.contact__email {
+  display: inline-block;
+  margin-top: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  border-bottom: 1px solid #111111;
+  padding-bottom: 3px;
+  transition: color .25s ease, border-color .25s ease;
+  overflow-wrap: anywhere;
+}
+.contact__email:hover { color: #6f6f6f; border-color: #6f6f6f; }
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 3vw, 28px);
+  margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
+}
+.socials a {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #6f6f6f;
+  padding-block: 4px;
+}
+.socials a:hover { color: #111111; }
+
+/* ---- Footer ------------------------------------------------------------------ */
+
+.footer {
+  border-top: 1px solid #efefef;
+  padding-block: 28px;
+}
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer__legal { display: flex; gap: 22px; }
+.footer__legal a {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+.footer__legal a:hover { color: #111111; }
+
+/* ---- Scroll reveal (falls back to visible without JS) -------------------------- */
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+html.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Reduced motion: no movement, everything visible ----------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
   }
-  *,*::before,*::after{box-sizing:border-box}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);
-       font-size:17px;line-height:1.55;font-kerning:normal}
-  ::selection{background:var(--ink);color:var(--paper)}
-  a{color:inherit;text-decoration:none}
-  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-  h1,h2,h3,p,ul{margin:0}
-  ul{padding:0;list-style:none}
-  :focus{outline:none}
-  :focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:2px}
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
-           clip:rect(0 0 0 0);white-space:nowrap;border:0}
-
-  .site{overflow-x:clip}
-  .wrap{max-width:1200px;margin-inline:auto;padding-inline:clamp(20px,4.5vw,48px)}
-
-  /* ============ type system ============ */
-  .sqz{display:inline-block;transform:scaleX(.9);transform-origin:left center;will-change:transform}
-  .d1{font-size:clamp(3rem,9.5vw,7.6rem);font-weight:900;line-height:.88;
-      letter-spacing:-.045em;text-transform:uppercase;text-wrap:balance}
-  .d0{font-size:clamp(3.6rem,13vw,10.5rem);font-weight:900;line-height:.88;
-      letter-spacing:-.045em;text-transform:uppercase}
-  .ovl{display:flex;align-items:center;gap:14px;font-size:11px;font-weight:600;
-       letter-spacing:.24em;text-transform:uppercase;color:var(--ink-dim)}
-  .ovl::before{content:"";width:30px;height:1px;background:currentColor;flex:none}
-  .dark .ovl{color:var(--paper-dim)}
-
-  /* ============ prototype ribbon ============ */
-  .ribbon{display:flex;align-items:center;gap:16px;background:var(--ink);color:var(--paper);
-          padding:9px clamp(16px,4vw,32px);font-size:12.5px;line-height:1.45}
-  .ribbon p{flex:1;letter-spacing:.01em}
-  .ribbon strong{font-weight:700}
-  .ribbon-x{flex:none;width:28px;height:28px;display:grid;place-items:center;font-size:18px;
-            line-height:1;border:1px solid var(--line-paper);border-radius:50%;
-            transition:background .2s var(--ease),color .2s var(--ease)}
-  .ribbon-x:hover{background:var(--paper);color:var(--ink)}
-
-  /* ============ nav ============ */
-  .nav{position:sticky;top:0;z-index:60;background:var(--paper);
-       border-bottom:1px solid var(--line-ink)}
-  .nav-row{display:flex;align-items:center;gap:clamp(14px,3vw,32px);height:64px}
-  .wordmark{font-size:17px;font-weight:900;letter-spacing:-.03em}
-  .wordmark .sqz{transform:scaleX(.92)}
-  .nav-links{display:flex;gap:clamp(12px,2.4vw,28px);margin-left:auto}
-  .nav-links a{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-               padding:6px 2px;position:relative}
-  .nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:2px;height:1.5px;
-                      background:currentColor;transition:right .25s var(--ease)}
-  .nav-links a:hover::after{right:0}
-
-  .tag-btn{flex:none;display:inline-flex;align-items:center;gap:9px;
-           background:var(--ink);color:var(--paper);border:1px solid var(--ink);
-           border-radius:999px;padding:8px 18px;font-size:13px;font-weight:700;
-           letter-spacing:.02em;font-style:italic;
-           transition:transform .2s var(--ease),background .2s var(--ease),color .2s var(--ease)}
-  .tag-btn:hover{transform:translateY(-1px)}
-  .tag-btn:active{transform:translateY(0)}
-  .eq{display:inline-flex;align-items:flex-end;gap:2.5px;height:12px}
-  .eq i{width:2px;height:4px;background:currentColor;border-radius:1px}
-  .eq i:nth-child(2){height:8px}
-  .eq i:nth-child(3){height:5px}
-  .eq i:nth-child(4){height:10px}
-  .tag-btn.playing .eq i{animation:eqb .38s ease-in-out infinite alternate}
-  .tag-btn.playing .eq i:nth-child(2){animation-delay:.09s}
-  .tag-btn.playing .eq i:nth-child(3){animation-delay:.18s}
-  .tag-btn.playing .eq i:nth-child(4){animation-delay:.27s}
-  @keyframes eqb{from{height:3px}to{height:12px}}
-
-  @media (max-width:600px){
-    .nav-row{flex-wrap:wrap;height:auto;padding-block:10px;row-gap:6px}
-    .nav-links{order:3;width:100%;margin-left:0;justify-content:space-between}
-    .tag-btn{margin-left:auto;padding:6px 14px}
-  }
-
-  /* ============ sections ============ */
-  .sec{padding-block:clamp(4.5rem,10vw,8rem)}
-  section{scroll-margin-top:110px}
-  @media (max-width:600px){section{scroll-margin-top:150px}}
-  .dark{background:var(--ink);color:var(--paper)}
-
-  /* ============ about (opener) ============ */
-  .about-head{display:flex;flex-direction:column;gap:22px;margin-bottom:clamp(2.5rem,6vw,4.5rem)}
-  .about-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);
-              gap:clamp(28px,5vw,72px);align-items:start}
-  @media (max-width:760px){
-    .about-grid{grid-template-columns:1fr}
-    .portrait{max-width:340px}
-  }
-  .about-copy{font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.4;font-weight:500;
-              letter-spacing:-.012em;max-width:34em;text-wrap:pretty}
-  .about-foot{display:flex;gap:28px;margin-top:2.2rem;font-size:11.5px;font-weight:600;
-              letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim)}
-  .portrait{aspect-ratio:4/5;background:
-              radial-gradient(90% 60% at 50% 32%,rgba(243,244,246,.1),rgba(243,244,246,0) 62%),
-              linear-gradient(180deg,#17181b 0%,#0b0c0e 78%);
-            position:relative;display:grid;place-items:center;overflow:hidden}
-  .portrait::before{content:"";position:absolute;inset:14px;border:1px solid var(--line-paper);
-                    pointer-events:none}
-  .ph-tag{font-size:10px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
-          color:var(--paper-dim);text-align:center}
-
-  /* ============ stat band ============ */
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr auto}
-  .stat{padding:clamp(1.6rem,4vw,2.8rem) clamp(1.2rem,3vw,2.4rem);
-        display:flex;flex-direction:column;gap:10px}
-  .stat:first-child{padding-left:0}
-  .stat:last-child{padding-right:0}
-  .stat + .stat{border-left:1px solid var(--line-paper)}
-  .stat-n{font-size:clamp(2.1rem,4.6vw,3.9rem);font-weight:900;line-height:.92;
-          letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;
-          font-variant-numeric:tabular-nums}
-  .stat-l{font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;
-          color:var(--paper-dim)}
-  @media (max-width:720px){
-    .stats-grid{grid-template-columns:1fr}
-    .stat{padding-inline:0}
-    .stat + .stat{border-left:0;border-top:1px solid var(--line-paper)}
-  }
-
-  /* marquee */
-  .marq{overflow:hidden;border-top:1px solid var(--line-paper);padding-block:15px}
-  .marq-track{display:flex;width:max-content;animation:marq 46s linear infinite}
-  .marq-half{display:flex;align-items:center;flex:none}
-  .marq-half span{font-size:12.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-                  white-space:nowrap;padding-inline:1.5rem}
-  .marq-half i{font-style:normal;color:var(--paper-dim);font-size:9px}
-  @keyframes marq{to{transform:translateX(-50%)}}
-
-  /* ============ credits carousel ============ */
-  .cred-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
-             flex-wrap:wrap;margin-bottom:clamp(2rem,5vw,3.5rem)}
-  .cred-head .stack{display:flex;flex-direction:column;gap:20px;min-width:0}
-  .car-ctrl{display:flex;align-items:center;gap:14px;padding-bottom:6px}
-  .car-count{font-size:12px;font-weight:600;letter-spacing:.18em;color:var(--ink-dim);
-             font-variant-numeric:tabular-nums}
-  .car-btn{width:44px;height:44px;border:1px solid var(--ink);border-radius:50%;
-           display:grid;place-items:center;font-size:17px;
-           transition:background .2s var(--ease),color .2s var(--ease),opacity .2s}
-  .car-btn:hover:not(:disabled){background:var(--ink);color:var(--paper)}
-  .car-btn:disabled{opacity:.25;cursor:default}
-
-  .car-track{display:flex;gap:var(--gap);overflow-x:auto;overscroll-behavior-x:contain;
-             scroll-snap-type:x mandatory;cursor:grab;padding-bottom:8px;
-             -webkit-user-select:none;user-select:none;
-             scrollbar-width:none}
-  .car-track::-webkit-scrollbar{display:none}
-  .car-track.dragging{scroll-snap-type:none;cursor:grabbing;scroll-behavior:auto}
-
-  .card{flex:0 0 calc((100% - 2*var(--gap))/3);min-width:0;scroll-snap-align:start}
-  @media (max-width:960px){.card{flex-basis:calc((100% - var(--gap))/2)}}
-  @media (max-width:640px){.card{flex-basis:82%}}
-
-  .cov{aspect-ratio:1/1;background:var(--ink);position:relative;overflow:hidden}
-  .cov svg{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:100%;
-           transition:transform .6s var(--ease)}
-  .card:hover .cov svg{transform:scale(1.045)}
-  .cov-tag{position:absolute;top:12px;left:14px;font-size:9px;font-weight:700;
-           letter-spacing:.28em;text-transform:uppercase;color:var(--paper-dim);z-index:1}
-  .cov-big{position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);
-           font-size:min(15rem,58cqw);font-size:14rem;font-weight:900;line-height:1;
-           letter-spacing:-.05em;transform:scaleX(.82)}
-  .card-meta{padding-top:16px;display:flex;flex-direction:column;gap:5px}
-  .card-title{font-size:clamp(1.3rem,2vw,1.55rem);font-weight:900;letter-spacing:-.03em;
-              line-height:1.02;text-transform:uppercase;overflow-wrap:break-word}
-  .card-artist{font-size:13.5px;color:var(--ink-dim);letter-spacing:.01em}
-  .cred-cta{margin-top:clamp(2.2rem,5vw,3.2rem)}
-
-  /* buttons */
-  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:var(--paper);
-       border:1px solid var(--ink);padding:15px 28px;font-size:13px;font-weight:700;
-       letter-spacing:.14em;text-transform:uppercase;
-       transition:background .22s var(--ease),color .22s var(--ease),transform .22s var(--ease)}
-  .btn:hover{background:transparent;color:var(--ink);transform:translateY(-2px)}
-  .btn .arw{transition:transform .22s var(--ease)}
-  .btn:hover .arw{transform:translateX(5px)}
-  .dark .btn{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-  .dark .btn:hover{background:transparent;color:var(--paper)}
-
-  /* ============ drum kits ============ */
-  .kits-head{margin-bottom:clamp(2.2rem,5vw,3.6rem);display:flex;flex-direction:column;gap:20px}
-  .kit{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);
-       gap:clamp(28px,5vw,64px);align-items:center;
-       border-top:1px solid var(--line-paper);padding-top:clamp(2rem,4.5vw,3rem)}
-  .kit-art{aspect-ratio:1/1;background:#101114;position:relative;max-width:420px;overflow:hidden}
-  .kit-art svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .kit-flag{display:inline-flex;align-self:flex-start;border:1px solid var(--line-paper);
-            border-radius:999px;padding:5px 14px;font-size:10px;font-weight:700;
-            letter-spacing:.26em;text-transform:uppercase;color:var(--paper-dim)}
-  .kit-info{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
-  .kit-name{font-size:clamp(2.1rem,5vw,4rem);font-weight:900;line-height:.92;
-            letter-spacing:-.04em;text-transform:uppercase}
-  .kit-desc{max-width:36em;color:var(--paper-dim);font-size:15.5px;text-wrap:pretty}
-  .kit-price{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:900;letter-spacing:-.02em;
-             font-variant-numeric:tabular-nums}
-  .kit-note{font-size:12px;letter-spacing:.08em;color:var(--paper-dim)}
-  @media (max-width:760px){.kit{grid-template-columns:1fr}.kit-art{max-width:340px}}
-
-  /* ============ contact ============ */
-  .contact-stack{display:flex;flex-direction:column;align-items:flex-start;
-                 gap:clamp(1.4rem,3.5vw,2.2rem)}
-  .contact-line{font-size:12px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;
-                color:var(--ink-dim)}
-  .contact-mail{font-size:clamp(1.35rem,3.6vw,2.5rem);font-weight:700;letter-spacing:-.025em;
-                border-bottom:2px solid currentColor;padding-bottom:4px;
-                transition:opacity .2s var(--ease);overflow-wrap:anywhere}
-  .contact-mail:hover{opacity:.55}
-  .socials{display:flex;gap:clamp(18px,3vw,34px);flex-wrap:wrap}
-  .socials a{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-             padding:6px 0;position:relative}
-  .socials a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;
-                    background:currentColor;transition:right .25s var(--ease)}
-  .socials a:hover::after{right:0}
-
-  /* ============ footer ============ */
-  .foot{padding-block:26px}
-  .foot-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-  .foot-legal{display:flex;gap:26px}
-  .foot-legal a{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
-                color:var(--paper-dim);transition:color .2s var(--ease)}
-  .foot-legal a:hover{color:var(--paper)}
-
-  /* ============ reveal (JS-gated: visible without JS) ============ */
-  .js .reveal{opacity:0;transform:translateY(26px);
-              transition:opacity .75s ease,transform .75s var(--ease);
-              transition-delay:var(--rd,0s)}
-  .js .reveal.in{opacity:1;transform:none}
-
-  /* ============ reduced motion ============ */
-  @media (prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto}
-    .js .reveal{opacity:1;transform:none;transition:none}
-    .marq-track{animation:none}
-    .tag-btn.playing .eq i{animation:none;height:12px}
-    .cov svg,.btn,.btn .arw,.tag-btn{transition:none}
-    .card:hover .cov svg{transform:none}
-    .btn:hover{transform:none}
-  }
+  html.js .reveal { opacity: 1; transform: none; }
+}
 </style>
 
-<div class="site">
 
-  <!-- prototype ribbon -->
-  <div class="ribbon" id="ribbon" role="status">
-    <p><strong>Interaktiver Prototyp</strong> — Fotos, Zahlen und der forever-Sound sind Platzhalter. Aufbau, Swipe &amp; Interaktion sind echt.</p>
-    <button class="ribbon-x" id="ribbonClose" aria-label="Hinweis schließen">&times;</button>
+<!-- Prototype ribbon -->
+<div class="ribbon" id="ribbon" role="status">
+  Prototyp — Fotos, Zahlen und der forever-Sound sind Platzhalter.
+  <button class="ribbon__close" id="ribbonClose" type="button" aria-label="Hinweis schließen">&times;</button>
+</div>
+
+<!-- Nav -->
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="wordmark" href="#about">madein2k</a>
+    <nav aria-label="Main">
+      <ul class="nav__links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#credits">Credits</a></li>
+        <li><a href="#kits">Kits</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="forever" id="foreverBtn" type="button" aria-pressed="false"
+            aria-label="Play the forever producer tag (placeholder sound)">
+      <span class="eq" aria-hidden="true"><span></span><span></span><span></span></span>
+      forever
+    </button>
   </div>
+</header>
 
-  <!-- nav -->
-  <header class="nav">
-    <div class="wrap nav-row">
-      <a class="wordmark" href="#about"><span class="sqz">madein2k</span></a>
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="#about">About</a>
-        <a href="#credits">Credits</a>
-        <a href="#kits">Kits</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <button class="tag-btn" id="foreverBtn" type="button" aria-pressed="false"
-              aria-label="Play the forever producer tag — placeholder sound">
-        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>forever
-      </button>
-    </div>
-  </header>
+<main>
+  <h1 class="sr-only">madein2k — Music producer, Berlin</h1>
 
-  <!-- ABOUT (opener) -->
-  <section class="sec" id="about" aria-labelledby="aboutTitle">
-    <div class="wrap">
-      <div class="about-head">
-        <p class="ovl reveal">Producer — Berlin</p>
-        <h1 class="d1 reveal" id="aboutTitle" style="--rd:.08s"><span class="sqz">About</span></h1>
-      </div>
-      <div class="about-grid">
-        <div class="reveal" style="--rd:.14s">
-          <p class="about-copy">madein2k is a Berlin-based producer behind some of contemporary European rap's biggest records — and the signature "forever" tag. His productions have crossed 900M+ streams, with credits from Luciano and La Mano 1.9 to D-Block Europe, Shindy, Pashanim, Jazeek and Kalim. He also releases his own music as an artist.</p>
-          <div class="about-foot">
-            <span>Producer</span><span>Artist</span><span>Sound design</span>
-          </div>
-        </div>
-        <div class="portrait reveal" style="--rd:.2s" role="img" aria-label="Portrait placeholder">
-          <span class="ph-tag">Portrait<br>Platzhalter</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Shared SVG defs (star shape) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <polygon id="star5" points="0,-10 2.25,-3.09 9.51,-3.09 3.63,1.18 5.88,8.09 0,3.82 -5.88,8.09 -3.63,1.18 -9.51,-3.09 -2.25,-3.09"></polygon>
+    </defs>
+  </svg>
 
-  <!-- STAT BAND -->
-  <section class="dark" aria-label="Key numbers">
-    <div class="wrap">
-      <div class="stats-grid">
-        <div class="stat reveal">
-          <span class="stat-n"><span class="sqz">900M+</span></span>
-          <span class="stat-l">Streams</span>
-        </div>
-        <div class="stat reveal" style="--rd:.08s">
-          <span class="stat-n"><span class="sqz">40+</span></span>
-          <span class="stat-l">Productions</span>
-        </div>
-        <div class="stat reveal" style="--rd:.16s">
-          <span class="stat-n"><span class="sqz">Gold &amp; Platinum</span></span>
-          <span class="stat-l">Certified records</span>
-        </div>
-      </div>
-    </div>
-    <div class="marq" aria-hidden="true">
-      <div class="marq-track">
-        <div class="marq-half">
-          <span>Luciano</span><i>&#9632;</i><span>La Mano 1.9</span><i>&#9632;</i><span>Sosa La M</span><i>&#9632;</i><span>Thizzy52</span><i>&#9632;</i><span>D-Block Europe</span><i>&#9632;</i><span>Shiva</span><i>&#9632;</i><span>Shindy</span><i>&#9632;</i><span>Pashanim</span><i>&#9632;</i><span>Jazeek</span><i>&#9632;</i><span>Kalim</span><i>&#9632;</i>
-        </div>
-        <div class="marq-half">
-          <span>Luciano</span><i>&#9632;</i><span>La Mano 1.9</span><i>&#9632;</i><span>Sosa La M</span><i>&#9632;</i><span>Thizzy52</span><i>&#9632;</i><span>D-Block Europe</span><i>&#9632;</i><span>Shiva</span><i>&#9632;</i><span>Shindy</span><i>&#9632;</i><span>Pashanim</span><i>&#9632;</i><span>Jazeek</span><i>&#9632;</i><span>Kalim</span><i>&#9632;</i>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SELECTED CREDITS -->
-  <section class="sec" id="credits" aria-labelledby="credTitle">
-    <div class="wrap">
-      <div class="cred-head">
-        <div class="stack">
-          <p class="ovl reveal">Selected credits</p>
-          <h2 class="d1 reveal" id="credTitle" style="--rd:.08s"><span class="sqz">Selected<br>Credits</span></h2>
-        </div>
-        <div class="car-ctrl reveal" style="--rd:.14s">
-          <span class="car-count" id="carCount" aria-hidden="true">01 / 06</span>
-          <button class="car-btn" id="carPrev" type="button" aria-label="Previous credits">&#8592;</button>
-          <button class="car-btn" id="carNext" type="button" aria-label="Next credits">&#8594;</button>
-        </div>
-      </div>
-
-      <p class="sr-only" id="carHint">Horizontal carousel. Use the left and right arrow keys to browse the credits.</p>
-      <div class="car-track" id="carTrack" tabindex="0" role="group"
-           aria-roledescription="carousel" aria-label="Selected credits" aria-describedby="carHint">
-
-        <article class="card reveal">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-opacity=".3" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              <polygon points="0,-10 2.25,-3.09 9.51,-3.09 3.63,1.18 5.88,8.09 0,3.82 -5.88,8.09 -3.63,1.18 -9.51,-3.09 -2.25,-3.09"
-                       transform="translate(60 63) scale(4.1)" fill="none" stroke="#f3f4f6"
-                       stroke-width="1.5" vector-effect="non-scaling-stroke"/>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Starboy</h3>
-            <p class="card-artist">Luciano feat. Jazeek</p>
-          </div>
-        </article>
-
-        <article class="card reveal" style="--rd:.07s">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <defs>
-                <polygon id="eust" points="0,-10 2.25,-3.09 9.51,-3.09 3.63,1.18 5.88,8.09 0,3.82 -5.88,8.09 -3.63,1.18 -9.51,-3.09 -2.25,-3.09"/>
-              </defs>
-              <g fill="#f3f4f6">
-                <use href="#eust" transform="translate(60 26) scale(.62)"/>
-                <use href="#eust" transform="translate(77 30.56) scale(.62)"/>
-                <use href="#eust" transform="translate(89.44 43) scale(.62)"/>
-                <use href="#eust" transform="translate(94 60) scale(.62)"/>
-                <use href="#eust" transform="translate(89.44 77) scale(.62)"/>
-                <use href="#eust" transform="translate(77 89.44) scale(.62)"/>
-                <use href="#eust" transform="translate(60 94) scale(.62)"/>
-                <use href="#eust" transform="translate(43 89.44) scale(.62)"/>
-                <use href="#eust" transform="translate(30.56 77) scale(.62)"/>
-                <use href="#eust" transform="translate(26 60) scale(.62)"/>
-                <use href="#eust" transform="translate(30.56 43) scale(.62)"/>
-                <use href="#eust" transform="translate(43 30.56) scale(.62)"/>
+  <!-- ABOUT — the opener, portrait blended into the text -->
+  <section class="section about" id="about">
+    <div class="container">
+      <h2 class="label reveal">About</h2>
+      <div class="about-comp reveal">
+        <div class="portrait" aria-hidden="true">
+          <svg viewBox="0 0 600 660" role="img" focusable="false">
+            <defs>
+              <radialGradient id="pField" cx="60%" cy="40%" r="70%">
+                <stop offset="0%" stop-color="#a6a6a6"></stop>
+                <stop offset="55%" stop-color="#d9d9d9"></stop>
+                <stop offset="100%" stop-color="#ffffff"></stop>
+              </radialGradient>
+              <radialGradient id="pFade" cx="55%" cy="48%" r="58%">
+                <stop offset="0%" stop-color="#ffffff"></stop>
+                <stop offset="72%" stop-color="#ffffff"></stop>
+                <stop offset="100%" stop-color="#000000"></stop>
+              </radialGradient>
+              <mask id="pMask">
+                <rect width="600" height="660" fill="url(#pFade)"></rect>
+              </mask>
+              <filter id="pBlur" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="30"></feGaussianBlur>
+              </filter>
+              <filter id="pNoise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.5 0.5 0.5 0 0"></feColorMatrix>
+              </filter>
+            </defs>
+            <g mask="url(#pMask)">
+              <rect width="600" height="660" fill="url(#pField)"></rect>
+              <g filter="url(#pBlur)" opacity="0.55">
+                <ellipse cx="372" cy="256" rx="92" ry="112" fill="#2e2e2e"></ellipse>
+                <path d="M212,660 C222,470 288,372 372,372 C456,372 522,470 532,660 Z" fill="#2e2e2e"></path>
               </g>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Europa</h3>
-            <p class="card-artist">OC &amp; madein2k</p>
-          </div>
-        </article>
-
-        <article class="card reveal" style="--rd:.14s">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <circle cx="60" cy="60" r="46" fill="none" stroke="#f3f4f6" stroke-opacity=".28" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              <text x="60" y="64" text-anchor="middle" dominant-baseline="middle"
-                    font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="86"
-                    font-weight="900" fill="#f3f4f6" transform="scale(.86 1)" transform-origin="60 60">1</text>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Hit One</h3>
-            <p class="card-artist">Luciano</p>
-          </div>
-        </article>
-
-        <article class="card reveal" style="--rd:.21s">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <g stroke="#f3f4f6" stroke-width="1" vector-effect="non-scaling-stroke">
-                <line x1="24" y1="0" x2="24" y2="120" stroke-opacity=".4"/>
-                <line x1="48" y1="0" x2="48" y2="120" stroke-opacity=".4"/>
-                <line x1="72" y1="0" x2="72" y2="120" stroke-opacity=".4"/>
-                <line x1="96" y1="0" x2="96" y2="120" stroke-opacity=".4"/>
-                <line x1="0" y1="24" x2="120" y2="24" stroke-opacity=".4"/>
-                <line x1="0" y1="48" x2="120" y2="48" stroke-opacity=".4"/>
-                <line x1="0" y1="72" x2="120" y2="72" stroke-opacity=".4"/>
-                <line x1="0" y1="96" x2="120" y2="96" stroke-opacity=".4"/>
-              </g>
-              <rect x="48" y="48" width="24" height="24" fill="#f3f4f6"/>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Plaza</h3>
-            <p class="card-artist">Sosa La M</p>
-          </div>
-        </article>
-
-        <article class="card reveal" style="--rd:.28s">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <g fill="none" stroke="#f3f4f6" stroke-width="1.2" vector-effect="non-scaling-stroke">
-                <circle cx="60" cy="60" r="10" stroke-opacity=".95"/>
-                <circle cx="60" cy="60" r="20" stroke-opacity=".75"/>
-                <circle cx="60" cy="60" r="30" stroke-opacity=".55"/>
-                <circle cx="60" cy="60" r="40" stroke-opacity=".38"/>
-                <circle cx="60" cy="60" r="50" stroke-opacity=".22"/>
-              </g>
-              <circle cx="60" cy="60" r="3.5" fill="#f3f4f6"/>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Milano</h3>
-            <p class="card-artist">Shiva</p>
-          </div>
-        </article>
-
-        <article class="card reveal" style="--rd:.35s">
-          <div class="cov">
-            <span class="cov-tag">Cover — Platzhalter</span>
-            <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-              <defs>
-                <pattern id="klt" width="12" height="12" patternUnits="userSpaceOnUse">
-                  <circle cx="6" cy="6" r="1.3" fill="#f3f4f6"/>
-                </pattern>
-                <linearGradient id="kltf" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#0b0c0e" stop-opacity="0"/>
-                  <stop offset="1" stop-color="#0b0c0e" stop-opacity=".92"/>
-                </linearGradient>
-              </defs>
-              <rect width="120" height="120" fill="url(#klt)"/>
-              <rect width="120" height="120" fill="url(#kltf)"/>
-            </svg>
-          </div>
-          <div class="card-meta">
-            <h3 class="card-title">Kalt</h3>
-            <p class="card-artist">Pashanim</p>
-          </div>
-        </article>
-
-      </div>
-
-      <div class="cred-cta reveal">
-        <a class="btn" href="#">Listen to all productions <span class="arw" aria-hidden="true">&#8594;</span></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- DRUM KITS -->
-  <section class="sec dark" id="kits" aria-labelledby="kitsTitle">
-    <div class="wrap">
-      <div class="kits-head">
-        <p class="ovl reveal">Shop</p>
-        <h2 class="d1 reveal" id="kitsTitle" style="--rd:.08s"><span class="sqz">Drum Kits</span></h2>
-      </div>
-      <div class="kit">
-        <div class="kit-art reveal" role="img" aria-label="Kit artwork placeholder — step sequencer grid">
-          <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-            <g>
-              <rect x="12" y="12" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="37" y="12" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="62" y="12" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="87" y="12" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="12" y="37" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="37" y="37" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="62" y="37" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="87" y="37" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="12" y="62" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="37" y="62" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="62" y="62" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="87" y="62" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="12" y="87" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="37" y="87" width="20" height="20" fill="none" stroke="#f3f4f6" stroke-opacity=".3"/>
-              <rect x="62" y="87" width="20" height="20" fill="#f3f4f6"/>
-              <rect x="87" y="87" width="20" height="20" fill="#f3f4f6"/>
+              <rect width="600" height="660" filter="url(#pNoise)" opacity="0.06"></rect>
             </g>
           </svg>
+          <span class="portrait__tag">Platzhalter — Porträt</span>
         </div>
-        <div class="kit-info">
-          <span class="kit-flag reveal">Current release</span>
-          <h3 class="kit-name reveal" style="--rd:.06s"><span class="sqz">2K Stash Vol.&nbsp;1</span></h3>
-          <p class="kit-desc reveal" style="--rd:.12s">Drums, textures and loops from the actual sessions. One-time purchase, instant download.</p>
-          <p class="kit-price reveal" style="--rd:.18s">&euro;29.99</p>
-          <a class="btn reveal" style="--rd:.24s" href="#">Get the kit <span class="arw" aria-hidden="true">&#8594;</span></a>
-          <p class="kit-note reveal" style="--rd:.3s">Sold direct via PayHip.</p>
+        <div class="about-text">
+          <p class="about-copy">madein2k is a Berlin-based producer behind some of contemporary European rap's biggest records — and the signature "forever" tag. His productions have crossed 900M+ streams, with credits from Luciano and La Mano 1.9 to D-Block Europe, Shindy, Pashanim, Jazeek and Kalim. He also releases his own music as an artist.</p>
+          <p class="about-stats">900M+ streams &middot; 40+ productions</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- LET'S WORK -->
-  <section class="sec" id="contact" aria-labelledby="workTitle">
-    <div class="wrap">
-      <div class="contact-stack">
-        <p class="ovl reveal">Contact</p>
-        <h2 class="d0 reveal" id="workTitle" style="--rd:.08s"><span class="sqz">Let's Work.</span></h2>
-        <p class="contact-line reveal" style="--rd:.14s">Business / production inquiries</p>
-        <a class="contact-mail reveal" style="--rd:.2s" href="mailto:contact@madein2k.com">contact@madein2k.com</a>
-        <ul class="socials reveal" style="--rd:.26s">
+  <!-- SELECTED CREDITS — the swipe carousel, calm chrome -->
+  <section class="section" id="credits">
+    <div class="container">
+      <div class="credits-head reveal">
+        <h2 class="label" id="creditsLabel">Selected Credits</h2>
+        <div class="credits-ctrl">
+          <button class="cbtn" id="cPrev" type="button" aria-label="Previous">&larr;</button>
+          <span class="ccount" id="cCount" aria-hidden="true">1&thinsp;/&thinsp;5</span>
+          <button class="cbtn" id="cNext" type="button" aria-label="Next">&rarr;</button>
+        </div>
+      </div>
+
+      <div class="credits-track reveal" id="creditsTrack" tabindex="0" role="region"
+           aria-labelledby="creditsLabel" aria-describedby="creditsHint">
+
+        <figure class="credit">
+          <div class="cover" aria-hidden="true">
+            <svg viewBox="0 0 400 400" focusable="false">
+              <rect width="400" height="400" fill="#ffffff"></rect>
+              <use href="#star5" transform="translate(200 200) scale(9)" fill="#0c0c0c"></use>
+            </svg>
+            <span class="ph">Platzhalter</span>
+          </div>
+          <figcaption>
+            <p class="credit__title">Starboy</p>
+            <p class="credit__artist">Luciano feat. Jazeek</p>
+          </figcaption>
+        </figure>
+
+        <figure class="credit">
+          <div class="cover" aria-hidden="true">
+            <svg viewBox="0 0 400 400" focusable="false">
+              <rect width="400" height="400" fill="#0c0c0c"></rect>
+              <g fill="#ffffff">
+                <use href="#star5" transform="translate(200 90) scale(2)"></use>
+                <use href="#star5" transform="translate(255 104.74) scale(2)"></use>
+                <use href="#star5" transform="translate(295.26 145) scale(2)"></use>
+                <use href="#star5" transform="translate(310 200) scale(2)"></use>
+                <use href="#star5" transform="translate(295.26 255) scale(2)"></use>
+                <use href="#star5" transform="translate(255 295.26) scale(2)"></use>
+                <use href="#star5" transform="translate(200 310) scale(2)"></use>
+                <use href="#star5" transform="translate(145 295.26) scale(2)"></use>
+                <use href="#star5" transform="translate(104.74 255) scale(2)"></use>
+                <use href="#star5" transform="translate(90 200) scale(2)"></use>
+                <use href="#star5" transform="translate(104.74 145) scale(2)"></use>
+                <use href="#star5" transform="translate(145 104.74) scale(2)"></use>
+              </g>
+            </svg>
+            <span class="ph">Platzhalter</span>
+          </div>
+          <figcaption>
+            <p class="credit__title">Europa</p>
+            <p class="credit__artist">OC &amp; madein2k</p>
+          </figcaption>
+        </figure>
+
+        <figure class="credit">
+          <div class="cover" aria-hidden="true">
+            <svg viewBox="0 0 400 400" focusable="false">
+              <rect width="400" height="400" fill="#ffffff"></rect>
+              <g fill="none" stroke="#0c0c0c" stroke-width="2">
+                <circle cx="200" cy="200" r="120"></circle>
+                <circle cx="200" cy="200" r="80"></circle>
+                <circle cx="200" cy="200" r="40"></circle>
+              </g>
+              <circle cx="200" cy="200" r="10" fill="#0c0c0c"></circle>
+            </svg>
+            <span class="ph">Platzhalter</span>
+          </div>
+          <figcaption>
+            <p class="credit__title">Hit One</p>
+            <p class="credit__artist">Luciano</p>
+          </figcaption>
+        </figure>
+
+        <figure class="credit">
+          <div class="cover" aria-hidden="true">
+            <svg viewBox="0 0 400 400" focusable="false">
+              <rect width="400" height="400" fill="#ffffff"></rect>
+              <path d="M40,200 C80,120 130,120 200,200 C270,280 320,280 360,200"
+                    fill="none" stroke="#0c0c0c" stroke-width="3"></path>
+            </svg>
+            <span class="ph">Platzhalter</span>
+          </div>
+          <figcaption>
+            <p class="credit__title">Forever</p>
+            <p class="credit__artist">madein2k</p>
+          </figcaption>
+        </figure>
+
+        <figure class="credit">
+          <div class="cover" aria-hidden="true">
+            <svg viewBox="0 0 400 400" focusable="false">
+              <rect width="400" height="400" fill="#ffffff"></rect>
+              <path d="M200,60 A140,140 0 0 1 200,340 Z" fill="#0c0c0c"></path>
+            </svg>
+            <span class="ph">Platzhalter</span>
+          </div>
+          <figcaption>
+            <p class="credit__title">Nachtfahrt</p>
+            <p class="credit__artist">Platzhalter</p>
+          </figcaption>
+        </figure>
+
+      </div>
+
+      <p class="credits-hint" id="creditsHint">Ziehen, wischen oder Pfeiltasten.</p>
+    </div>
+  </section>
+
+  <!-- DRUM KITS — one product, simple -->
+  <section class="section kit" id="kits">
+    <div class="container">
+      <h2 class="label reveal">Drum Kits</h2>
+      <div class="kit-row reveal">
+        <div class="kit-cover" aria-hidden="true">
+          <svg viewBox="0 0 400 400" focusable="false">
+            <rect width="400" height="400" fill="#0c0c0c"></rect>
+            <g fill="none" stroke="#ffffff" stroke-width="1.5">
+              <rect x="70" y="70" width="50" height="50" rx="6"></rect>
+              <rect x="140" y="70" width="50" height="50" rx="6"></rect>
+              <rect x="210" y="70" width="50" height="50" rx="6"></rect>
+              <rect x="280" y="70" width="50" height="50" rx="6"></rect>
+              <rect x="70" y="140" width="50" height="50" rx="6"></rect>
+              <rect x="140" y="140" width="50" height="50" rx="6"></rect>
+              <rect x="210" y="140" width="50" height="50" rx="6"></rect>
+              <rect x="280" y="140" width="50" height="50" rx="6"></rect>
+              <rect x="70" y="210" width="50" height="50" rx="6"></rect>
+              <rect x="140" y="210" width="50" height="50" rx="6"></rect>
+              <rect x="210" y="210" width="50" height="50" rx="6"></rect>
+              <rect x="280" y="210" width="50" height="50" rx="6"></rect>
+              <rect x="140" y="280" width="50" height="50" rx="6"></rect>
+              <rect x="210" y="280" width="50" height="50" rx="6"></rect>
+              <rect x="280" y="280" width="50" height="50" rx="6"></rect>
+            </g>
+            <rect x="70" y="280" width="50" height="50" rx="6" fill="#ffffff"></rect>
+          </svg>
+          <span class="ph">Platzhalter</span>
+        </div>
+        <div>
+          <h3 class="kit__title">2K Stash Vol. 1</h3>
+          <p class="kit__desc">Drums, one-shots and textures from the original sessions. One kit, no filler.</p>
+          <p class="kit__price">&euro;29.99</p>
+          <a class="kit__cta" href="#" aria-label="Get the kit — 2K Stash Vol. 1, 29.99 Euro">Get the kit &rarr;</a>
+          <p class="kit__note">Sold direct via PayHip.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT — the one big typographic moment -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <h2 class="label reveal">Contact</h2>
+      <p class="display reveal">Let&rsquo;s work.</p>
+      <div class="reveal">
+        <a class="contact__email" href="mailto:contact@madein2k.com">contact@madein2k.com</a>
+        <ul class="socials">
           <li><a href="#">Instagram</a></li>
           <li><a href="#">TikTok</a></li>
           <li><a href="#">Spotify</a></li>
@@ -547,182 +721,190 @@
       </div>
     </div>
   </section>
+</main>
 
-  <!-- footer -->
-  <footer class="dark foot">
-    <div class="wrap foot-row">
-      <span class="wordmark"><span class="sqz">madein2k</span></span>
-      <nav class="foot-legal" aria-label="Legal">
+<footer class="footer">
+  <div class="container footer__inner">
+    <span class="wordmark">madein2k</span>
+    <nav aria-label="Legal">
+      <div class="footer__legal">
         <a href="#">Imprint</a>
         <a href="#">Privacy</a>
-      </nav>
-    </div>
-  </footer>
+      </div>
+    </nav>
+  </div>
+</footer>
 
-</div>
 
 <script>
-(function(){
+(function () {
   "use strict";
-  var doc=document, root=doc.documentElement;
-  root.classList.add("js");
-  var reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- prototype ribbon ---------- */
-  var ribbon=doc.getElementById("ribbon"),
-      ribbonClose=doc.getElementById("ribbonClose");
-  if(ribbon&&ribbonClose){
-    ribbonClose.addEventListener("click",function(){ ribbon.remove(); });
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function scrollBehavior() { return reduceMotion.matches ? "auto" : "smooth"; }
+
+  /* ---- Ribbon dismiss ---- */
+  var ribbon = document.getElementById("ribbon");
+  var ribbonClose = document.getElementById("ribbonClose");
+  if (ribbon && ribbonClose) {
+    ribbonClose.addEventListener("click", function () {
+      ribbon.parentNode.removeChild(ribbon);
+    });
   }
 
-  /* ---------- scroll reveal ---------- */
-  var reveals=[].slice.call(doc.querySelectorAll(".reveal"));
-  if(reduceMotion||!("IntersectionObserver" in window)){
-    reveals.forEach(function(el){ el.classList.add("in"); });
-  }else{
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
+  /* ---- Scroll reveal (visible fallback without JS) ---- */
+  document.documentElement.classList.add("js");
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  if ("IntersectionObserver" in window && !reduceMotion.matches) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
       });
-    },{threshold:.12,rootMargin:"0px 0px -6% 0px"});
-    reveals.forEach(function(el){ io.observe(el); });
+    }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* ---------- "forever" tag: Web Audio placeholder ---------- */
-  var foreverBtn=doc.getElementById("foreverBtn"), audioCtx=null;
+  /* ---- Credits carousel: drag, swipe, keys, snap ---- */
+  var track = document.getElementById("creditsTrack");
+  var prevBtn = document.getElementById("cPrev");
+  var nextBtn = document.getElementById("cNext");
+  var counter = document.getElementById("cCount");
 
-  function playTag(){
-    var AC=window.AudioContext||window.webkitAudioContext;
-    if(!AC) return;
-    audioCtx=audioCtx||new AC();
-    if(audioCtx.state==="suspended") audioCtx.resume();
-    var ctx=audioCtx, t0=ctx.currentTime+0.04;
+  if (track) {
+    var cards = Array.prototype.slice.call(track.querySelectorAll(".credit"));
 
-    var out=ctx.createGain(); out.gain.value=0.85; out.connect(ctx.destination);
+    var getStep = function () {
+      if (cards.length > 1) return cards[1].offsetLeft - cards[0].offsetLeft;
+      return track.clientWidth;
+    };
 
-    var lp=ctx.createBiquadFilter();
-    lp.type="lowpass"; lp.Q.value=0.8;
-    lp.frequency.setValueAtTime(900,t0);
-    lp.frequency.exponentialRampToValueAtTime(3400,t0+0.28);
-    lp.frequency.exponentialRampToValueAtTime(1400,t0+0.9);
-    lp.connect(out);
+    var clampScroll = function (x) {
+      return Math.max(0, Math.min(x, track.scrollWidth - track.clientWidth));
+    };
 
-    /* short tag-style echo */
-    var dly=ctx.createDelay(0.6); dly.delayTime.value=0.165;
-    var fb=ctx.createGain(); fb.gain.value=0.32;
-    var wet=ctx.createGain(); wet.gain.value=0.22;
-    lp.connect(dly); dly.connect(fb); fb.connect(dly); dly.connect(wet); wet.connect(out);
+    var update = function () {
+      var step = getStep();
+      var idx = step > 0 ? Math.round(track.scrollLeft / step) : 0;
+      idx = Math.max(0, Math.min(idx, cards.length - 1));
+      if (counter) counter.textContent = (idx + 1) + " / " + cards.length;
+      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
+      if (nextBtn) nextBtn.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    };
 
-    /* three-note "for-ev-er" motif: E5 - C#5 - A4, last note falls away */
-    var notes=[[659.25,0,0.11],[554.37,0.11,0.11],[440,0.22,0.55]];
-    notes.forEach(function(n){
-      var f=n[0], at=t0+n[1], dur=n[2];
-      [0,-8].forEach(function(det){
-        var o=ctx.createOscillator();
-        o.type="triangle";
-        o.detune.value=det;
-        o.frequency.setValueAtTime(f,at);
-        if(n[1]>0.2) o.frequency.exponentialRampToValueAtTime(f*0.93,at+dur);
-        var g=ctx.createGain();
-        g.gain.setValueAtTime(0.0001,at);
-        g.gain.linearRampToValueAtTime(det?0.11:0.22,at+0.015);
-        g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
-        o.connect(g); g.connect(lp);
-        o.start(at); o.stop(at+dur+0.05);
-      });
+    var ticking = false;
+    track.addEventListener("scroll", function () {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(function () { ticking = false; update(); });
+      }
     });
-  }
+    window.addEventListener("resize", update);
 
-  if(foreverBtn){
-    foreverBtn.addEventListener("click",function(){
-      if(foreverBtn.classList.contains("playing")) return;
-      try{ playTag(); }catch(e){}
-      foreverBtn.classList.add("playing");
-      foreverBtn.setAttribute("aria-pressed","true");
-      window.setTimeout(function(){
-        foreverBtn.classList.remove("playing");
-        foreverBtn.setAttribute("aria-pressed","false");
-      },1350);
-    });
-  }
+    /* Arrow buttons (quiet) */
+    var go = function (dir) {
+      track.scrollTo({ left: clampScroll(track.scrollLeft + dir * getStep()), behavior: scrollBehavior() });
+    };
+    if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { go(1); });
 
-  /* ---------- credits carousel ---------- */
-  var track=doc.getElementById("carTrack"),
-      prevBtn=doc.getElementById("carPrev"),
-      nextBtn=doc.getElementById("carNext"),
-      counter=doc.getElementById("carCount");
-
-  if(track&&track.children.length>1){
-    var cards=[].slice.call(track.children);
-
-    function step(){
-      return cards.length>1 ? (cards[1].offsetLeft-cards[0].offsetLeft) : track.clientWidth;
-    }
-    function maxScroll(){ return Math.max(0,track.scrollWidth-track.clientWidth); }
-    function maxIdx(){ var s=step(); return s>0 ? Math.round(maxScroll()/s) : 0; }
-    function curIdx(){
-      var s=step();
-      return s>0 ? Math.max(0,Math.min(maxIdx(),Math.round(track.scrollLeft/s))) : 0;
-    }
-    function pad(n){ return (n<10?"0":"")+n; }
-    function sync(){
-      var i=curIdx(), m=maxIdx();
-      if(counter) counter.textContent=pad(i+1)+" / "+pad(m+1);
-      if(prevBtn) prevBtn.disabled=(i<=0);
-      if(nextBtn) nextBtn.disabled=(i>=m);
-    }
-    function goTo(i){
-      var s=step(), target=Math.max(0,Math.min(maxIdx(),i))*s;
-      track.scrollTo({left:Math.min(target,maxScroll()),behavior:reduceMotion?"auto":"smooth"});
-    }
-
-    if(prevBtn) prevBtn.addEventListener("click",function(){ goTo(curIdx()-1); });
-    if(nextBtn) nextBtn.addEventListener("click",function(){ goTo(curIdx()+1); });
-
-    /* keyboard */
-    track.addEventListener("keydown",function(e){
-      var k=e.key;
-      if(k==="ArrowRight"){ e.preventDefault(); goTo(curIdx()+1); }
-      else if(k==="ArrowLeft"){ e.preventDefault(); goTo(curIdx()-1); }
-      else if(k==="Home"){ e.preventDefault(); goTo(0); }
-      else if(k==="End"){ e.preventDefault(); goTo(maxIdx()); }
+    /* Keyboard */
+    track.addEventListener("keydown", function (e) {
+      var to = null;
+      if (e.key === "ArrowRight") to = track.scrollLeft + getStep();
+      else if (e.key === "ArrowLeft") to = track.scrollLeft - getStep();
+      else if (e.key === "Home") to = 0;
+      else if (e.key === "End") to = track.scrollWidth;
+      if (to !== null) {
+        e.preventDefault();
+        track.scrollTo({ left: clampScroll(to), behavior: scrollBehavior() });
+      }
     });
 
-    /* mouse drag (touch keeps native scrolling + snap) */
-    var down=false,startX=0,startScroll=0,snapTimer=null;
-    track.addEventListener("pointerdown",function(e){
-      if(e.pointerType!=="mouse"||e.button!==0) return;
-      down=true; startX=e.clientX; startScroll=track.scrollLeft;
+    /* Mouse drag (touch uses native momentum + snap) */
+    var dragging = false, startX = 0, startLeft = 0;
+    track.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      dragging = true;
+      startX = e.clientX;
+      startLeft = track.scrollLeft;
       track.classList.add("dragging");
-      if(snapTimer){ clearTimeout(snapTimer); snapTimer=null; }
-      try{ track.setPointerCapture(e.pointerId); }catch(err){}
+      try { track.setPointerCapture(e.pointerId); } catch (err) { /* noop */ }
     });
-    track.addEventListener("pointermove",function(e){
-      if(!down) return;
-      track.scrollLeft=startScroll-(e.clientX-startX);
+    track.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      track.scrollLeft = startLeft - (e.clientX - startX);
     });
-    function endDrag(){
-      if(!down) return;
-      down=false;
-      /* keep snap disabled while we glide to the nearest slot, then re-enable */
-      goTo(curIdx());
-      snapTimer=window.setTimeout(function(){
-        track.classList.remove("dragging");
-        snapTimer=null;
-      },reduceMotion?50:420);
-    }
-    track.addEventListener("pointerup",endDrag);
-    track.addEventListener("pointercancel",endDrag);
+    var endDrag = function () {
+      if (!dragging) return;
+      dragging = false;
+      var step = getStep();
+      var target = step > 0 ? clampScroll(Math.round(track.scrollLeft / step) * step) : 0;
+      track.scrollTo({ left: target, behavior: scrollBehavior() });
+      window.setTimeout(function () { track.classList.remove("dragging"); }, 320);
+    };
+    track.addEventListener("pointerup", endDrag);
+    track.addEventListener("pointercancel", endDrag);
 
-    /* counter follows every scroll (drag, swipe, wheel, keys) */
-    var ticking=false;
-    track.addEventListener("scroll",function(){
-      if(ticking) return;
-      ticking=true;
-      window.requestAnimationFrame(function(){ sync(); ticking=false; });
-    },{passive:true});
-    window.addEventListener("resize",sync);
-    sync();
+    update();
+  }
+
+  /* ---- forever tag: short synthesized placeholder (Web Audio) ---- */
+  var foreverBtn = document.getElementById("foreverBtn");
+  var audioCtx = null;
+  var playingTimer = null;
+
+  function playTag() {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    if (!audioCtx) audioCtx = new Ctx();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+
+    var t0 = audioCtx.currentTime + 0.02;
+    var out = audioCtx.createGain();
+    out.gain.value = 0.5;
+    var lp = audioCtx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 2400;
+    out.connect(lp);
+    lp.connect(audioCtx.destination);
+
+    var note = function (f0, f1, t, d, type) {
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(f1, t + d);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.45, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g);
+      g.connect(out);
+      o.start(t);
+      o.stop(t + d + 0.05);
+    };
+
+    /* small three-note motif — "for-ev-er" */
+    note(392, 392, t0, 0.16, "triangle");
+    note(523.25, 523.25, t0 + 0.13, 0.16, "triangle");
+    note(784, 622.25, t0 + 0.26, 0.42, "sine");
+  }
+
+  if (foreverBtn) {
+    foreverBtn.addEventListener("click", function () {
+      playTag();
+      foreverBtn.classList.add("playing");
+      foreverBtn.setAttribute("aria-pressed", "true");
+      if (playingTimer) window.clearTimeout(playingTimer);
+      playingTimer = window.setTimeout(function () {
+        foreverBtn.classList.remove("playing");
+        foreverBtn.setAttribute("aria-pressed", "false");
+      }, 750);
+    });
   }
 })();
 </script>
