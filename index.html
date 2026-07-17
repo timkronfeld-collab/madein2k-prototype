@@ -137,6 +137,9 @@ ul { list-style: none; }
   .nav__inner { flex-wrap: wrap; row-gap: 4px; }
   .nav__links { width: 100%; margin-left: 0; justify-content: space-between; gap: 10px; }
   .nav__links a { font-size: 12px; letter-spacing: .08em; }
+  .credits-head { align-items: center; }
+  .credits-ctrl { gap: 8px; }
+  .cbtn { width: 38px; height: 38px; font-size: 14px; }
 }
 
 /* ---- Section rhythm ------------------------------------------------------ */
@@ -242,6 +245,7 @@ ul { list-style: none; }
   }
   .about-text { margin-top: 0; }
   .about-copy { max-width: none; }
+  .about-copy p { font-size: clamp(1rem, 4vw, 1.4rem); line-height: 1.5; }
 }
 
 /* ---- SELECTED CREDITS: auto-drifting swipe carousel ---------------------- */
@@ -275,6 +279,10 @@ ul { list-style: none; }
   -webkit-user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  /* soft edges so the drifting cards dissolve instead of hard-cutting */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 4%, #000 90%, transparent 100%);
 }
 .credits-track::-webkit-scrollbar { display: none; }
 .credits-track.dragging { cursor: grabbing; scroll-behavior: auto; }
