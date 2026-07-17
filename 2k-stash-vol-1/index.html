@@ -74,16 +74,44 @@ ul{list-style:none;}
 .section__head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:clamp(1.8rem,4vw,2.6rem);}
 
 /* kit contents grid */
-.contents{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(10px,1.6vw,16px);}
-.cell{background:var(--card); padding:clamp(1.2rem,2.5vw,1.8rem); display:flex; flex-direction:column; gap:8px;}
+.contents{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(12px,1.8vw,20px);}
+/* raised, slightly-3D cream tiles that press down (more shadow) on tap */
+.cell{
+  background:#faf8f3; border:1px solid #efece4; border-radius:12px;
+  padding:clamp(1.3rem,2.6vw,1.9rem); display:flex; flex-direction:column; gap:8px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  box-shadow:0 8px 20px rgba(13,13,13,.07), 0 1px 2px rgba(13,13,13,.05);
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+@media (hover:hover){ .cell:hover{ transform:translateY(-3px); box-shadow:0 16px 34px rgba(13,13,13,.13), 0 3px 8px rgba(13,13,13,.07); } }
+.cell:active, .cell.is-press{ transform:translateY(-1px); box-shadow:0 20px 40px rgba(13,13,13,.16), 0 4px 10px rgba(13,13,13,.09); }
 .cell__n{font-weight:800; font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
 .cell__l{font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--ink-2);}
 @media (max-width:720px){ .contents{grid-template-columns:repeat(2,1fr);} }
+@media (prefers-reduced-motion:reduce){ .cell{transition:none;} }
 
-/* no filler quote */
-.quote{max-width:24ch;}
+/* NO FILLER — text left, b/w studio photo (from behind) bleeding to the right edge */
+.nofiller{ display:grid; grid-template-columns:1fr 1fr; align-items:stretch; border-top:1px solid var(--line); }
+.nofiller__text{
+  display:flex; flex-direction:column; justify-content:center;
+  padding-block:clamp(3rem,7vw,5rem);
+  padding-left:max(clamp(20px,5vw,48px), calc((100vw - var(--wrap)) / 2));
+  padding-right:clamp(24px,3vw,48px);
+}
+.nofiller__photo{ position:relative; overflow:hidden; min-height:clamp(300px,34vw,460px); }
+.nofiller__photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:grayscale(1); }
 .quote__big{font-weight:800; font-size:clamp(2rem,5.5vw,3.4rem); line-height:.95; letter-spacing:-.035em; text-transform:uppercase;}
-.quote__text{margin-top:20px; max-width:52ch; font-size:clamp(1.05rem,2vw,1.35rem); line-height:1.5; color:var(--ink-2);}
+.quote__text{margin-top:20px; max-width:44ch; font-size:clamp(1.05rem,2vw,1.35rem); line-height:1.5; color:var(--ink-2);}
+@media (max-width:760px){
+  .nofiller{ grid-template-columns:1fr; }
+  .nofiller__text{ padding-inline:clamp(20px,5vw,48px); }
+  .nofiller__photo{ min-height:300px; }
+}
+
+/* small grey back-to-home link, top-left */
+.crumb{ padding-top:clamp(1.4rem,3.5vw,2.2rem); }
+.crumb a{ font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); }
+.crumb a:hover{ color:var(--ink); }
 
 /* all kits */
 .kits-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(16px,2.4vw,26px);}
@@ -122,6 +150,8 @@ ul{list-style:none;}
 </header>
 
 <main>
+  <p class="crumb container"><a href="../">&larr; Back to home</a></p>
+
   <!-- HERO -->
   <section class="container hero">
     <div class="hero__art">
@@ -162,10 +192,13 @@ ul{list-style:none;}
   </section>
 
   <!-- NO FILLER -->
-  <section class="section">
-    <div class="container">
+  <section class="nofiller">
+    <div class="nofiller__text">
       <h2 class="quote__big"><span class="sqz">No filler.</span></h2>
       <p class="quote__text">“Every sound in this kit was personally selected from my actual production library and used in real productions.”</p>
+    </div>
+    <div class="nofiller__photo">
+      <img src="../assets/studio-bw.jpg" width="1500" height="1000" alt="madein2k working from behind at his studio desk — headphones, monitors and keyboard." loading="lazy">
     </div>
   </section>
 
@@ -210,6 +243,21 @@ ul{list-style:none;}
     </nav>
   </div>
 </footer>
+
+<script>
+(function () {
+  "use strict";
+  /* press feedback (extra shadow) on the kit-contents tiles across mouse + touch */
+  Array.prototype.forEach.call(document.querySelectorAll(".cell"), function (c) {
+    var on = function () { c.classList.add("is-press"); };
+    var off = function () { c.classList.remove("is-press"); };
+    c.addEventListener("pointerdown", on);
+    c.addEventListener("pointerup", off);
+    c.addEventListener("pointerleave", off);
+    c.addEventListener("pointercancel", off);
+  });
+})();
+</script>
 
 </body>
 </html>
