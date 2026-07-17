@@ -186,7 +186,6 @@ ul { list-style: none; }
 .portrait img {
   width: 100%;
   height: auto;
-  filter: grayscale(1) contrast(1.02);
 }
 .about-text {
   grid-column: 1 / 8;
@@ -203,18 +202,35 @@ ul { list-style: none; }
   text-wrap: pretty;
 }
 .about-copy p + p { margin-top: 1em; }
-/* lead sentence first; supporting paragraphs step down for real hierarchy */
-.about-copy p:nth-child(n+2) {
-  font-size: clamp(1rem, 1.5vw, 1.16rem);
-  line-height: 1.5;
-  color: var(--ink-2);
-  max-width: 30em;
-}
-.about-copy .em {
+.about-copy .em { font-weight: 800; letter-spacing: -.02em; }
+
+/* the "forever" easter egg: bold inline word, a gentle underline pulse invites a click */
+.tag {
   font-weight: 800;
-  letter-spacing: -.02em;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
 }
-.about-copy .tagword { font-style: italic; }
+.tag::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -.06em; height: 2px;
+  background: currentColor; border-radius: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tag::after { animation: tagPulse 2.1s var(--ease) infinite; }
+  @keyframes tagPulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+}
+.tag:hover::after, .tag:focus-visible::after, .tag.playing::after { opacity: 1; animation: none; }
+.tag:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 2px; }
+
+/* dezent stat line under the about copy */
+.about-stats {
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
 
 @media (max-width: 820px) {
   .about-comp { display: block; }
@@ -226,106 +242,6 @@ ul { list-style: none; }
   }
   .about-text { margin-top: 0; }
   .about-copy { max-width: none; }
-}
-
-/* ---- the "forever" signature: big word, subtle life, click = tag sound --- */
-
-.forever-wrap {
-  margin-top: clamp(2.4rem, 6vw, 4rem);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-.forever {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(10px, 2vw, 20px);
-  cursor: pointer;
-  color: var(--ink);
-  -webkit-tap-highlight-color: transparent;
-}
-.forever__word {
-  font-weight: 800;
-  font-style: italic;
-  font-size: clamp(3rem, 11vw, 7.5rem);
-  line-height: .9;
-  letter-spacing: -.045em;
-  text-transform: lowercase;
-  transform-origin: left center;
-  transition: opacity .3s var(--ease);
-}
-/* gentle "breathing" so the word feels alive without being busy */
-@media (prefers-reduced-motion: no-preference) {
-  .forever__word { animation: breathe 4.5s var(--ease) infinite; }
-  @keyframes breathe { 0%,100% { opacity: .92; } 50% { opacity: 1; } }
-}
-.forever:hover .forever__word { opacity: 1; }
-.forever__eq {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: clamp(24px, 5vw, 46px);
-  flex: none;
-}
-.forever__eq i {
-  width: clamp(3px, .7vw, 5px);
-  height: 22%;
-  background: currentColor;
-  border-radius: 2px;
-  transform-origin: bottom;
-}
-.forever__eq i:nth-child(2) { height: 62%; }
-.forever__eq i:nth-child(3) { height: 38%; }
-.forever__eq i:nth-child(4) { height: 82%; }
-.forever.playing .forever__eq i { animation: eqPulse .42s ease-in-out infinite alternate; }
-.forever.playing .forever__eq i:nth-child(2) { animation-delay: .08s; }
-.forever.playing .forever__eq i:nth-child(3) { animation-delay: .16s; }
-.forever.playing .forever__eq i:nth-child(4) { animation-delay: .24s; }
-@keyframes eqPulse { from { transform: scaleY(.3); } to { transform: scaleY(1.35); } }
-.forever__hint {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-/* ---- STAT BAND: the loud black moment, kept ------------------------------ */
-
-.band {
-  background: var(--band);
-  color: var(--paper);
-}
-.band__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding-block: clamp(2.2rem, 5vw, 3.4rem);
-}
-.stat { padding-inline: clamp(.6rem, 2vw, 1.6rem); }
-.stat + .stat { border-left: 1px solid var(--band-line); }
-.stat__n {
-  font-weight: 800;
-  font-size: clamp(1.8rem, 4.4vw, 3.4rem);
-  line-height: .95;
-  letter-spacing: -.04em;
-  text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.stat__l {
-  margin-top: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--band-dim);
-}
-@media (max-width: 620px) {
-  .band__grid { grid-template-columns: 1fr; gap: 0; }
-  .stat { padding-block: 18px; }
-  .stat + .stat { border-left: 0; border-top: 1px solid var(--band-line); }
-  .stat__n { font-size: clamp(1.7rem, 9vw, 2.6rem); }
 }
 
 /* ---- SELECTED CREDITS: auto-drifting swipe carousel ---------------------- */
@@ -400,7 +316,7 @@ ul { list-style: none; }
 }
 .credit__artist { margin-top: 3px; font-size: 13px; color: var(--ink-3); }
 
-.credits-cta { margin-top: clamp(1.8rem, 4vw, 2.6rem); }
+.credits-cta { margin-top: clamp(1.8rem, 4vw, 2.6rem); text-align: center; }
 .btn {
   display: inline-flex; align-items: center; gap: 12px;
   background: var(--ink); color: var(--paper);
@@ -426,7 +342,7 @@ ul { list-style: none; }
   display: block;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #0c0c0c;
+  background: #ffffff;
   border: 1px solid var(--line);
 }
 .kit-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
@@ -538,7 +454,6 @@ html.js .reveal.in { opacity: 1; transform: none; }
   <!-- ABOUT -->
   <section class="section about" id="about">
     <div class="container">
-      <span class="eyebrow reveal">Producer — Berlin</span>
       <div class="about-comp">
         <div class="portrait reveal">
           <img src="assets/portrait.jpg" width="1100" height="1497"
@@ -546,39 +461,12 @@ html.js .reveal.in { opacity: 1; transform: none; }
         </div>
         <div class="about-text reveal">
           <div class="about-copy">
-            <p><span class="em">madein2k</span> is a Berlin-based music producer known for his distinctive sound, signature <span class="tagword">“forever”</span> producer tag and his work with some of the most influential artists in contemporary European rap. Closely connected to Luciano’s musical evolution, he has contributed to numerous releases and projects, with his productions generating over 900&nbsp;million streams worldwide — and counting.</p>
+            <p><span class="em">madein2k</span> is a Berlin-based music producer known for his distinctive sound, signature <span class="tag" id="forever" role="button" tabindex="0" aria-label="Play the forever producer tag">forever</span> producer tag and his work with some of the most influential artists in contemporary European rap. Closely connected to Luciano’s musical evolution, he has contributed to numerous releases and projects.</p>
             <p>His credits include Luciano, La Mano 1.9, Sosa La M, Thizzy52, D-Block Europe, Shiva, Shindy, Pashanim, Jazeek and Kalim.</p>
             <p>Beyond his production work, <span class="em">madein2k</span> also releases his own music as an artist.</p>
           </div>
+          <p class="about-stats">900M+ streams &middot; 200+ productions</p>
         </div>
-      </div>
-
-      <!-- the signature: click the word to hear the tag -->
-      <div class="forever-wrap reveal">
-        <div class="forever" id="forever" role="button" tabindex="0"
-             aria-label="Play the ‘forever’ producer tag">
-          <span class="forever__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span class="forever__word sqz">forever</span>
-        </div>
-        <span class="forever__hint">Tap to hear the tag</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- STAT BAND -->
-  <section class="band" aria-label="Key numbers">
-    <div class="container band__grid">
-      <div class="stat reveal">
-        <div class="stat__n"><span class="sqz">900M+</span></div>
-        <div class="stat__l">Streams</div>
-      </div>
-      <div class="stat reveal">
-        <div class="stat__n"><span class="sqz">200+</span></div>
-        <div class="stat__l">Productions</div>
-      </div>
-      <div class="stat reveal">
-        <div class="stat__n"><span class="sqz">Gold &amp; Platinum</span></div>
-        <div class="stat__l">Certified records</div>
       </div>
     </div>
   </section>
@@ -747,7 +635,7 @@ html.js .reveal.in { opacity: 1; transform: none; }
       <h2 class="heading reveal"><span class="sqz">Drum Kits</span></h2>
       <div class="kit-row reveal">
         <a class="kit-cover" href="2k-stash-vol-1/" aria-label="2K Stash Vol. 1 — view kit">
-          <img src="assets/kit-3d.jpg" width="900" height="1350" alt="2K Stash Vol. 1 — 3D box artwork" loading="lazy">
+          <img src="assets/kit-cover.jpg" width="900" height="900" alt="2K Stash Vol. 1 — cover artwork" loading="lazy">
         </a>
         <div class="kit-info">
           <span class="kit-flag">Current release</span>

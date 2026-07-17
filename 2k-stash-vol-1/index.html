@@ -4,21 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2K Stash Vol. 1 — madein2k</title>
-<meta name="description" content="2K Stash Vol. 1 — drums, one-shots and textures from madein2k's original sessions. One kit, no filler. €29.99, instant download via PayHip.">
+<meta name="description" content="2K Stash Vol. 1 — a curated collection of sounds used in real productions. 100 high-end sounds. €29.99, instant download via PayHip.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="../assets/favicon-light.png" media="(prefers-color-scheme: light)">
 <link rel="icon" href="../assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/favicon-light.png">
 <meta property="og:type" content="product">
 <meta property="og:title" content="2K Stash Vol. 1 — madein2k">
-<meta property="og:description" content="Drums, one-shots and textures from the original sessions. €29.99.">
-<meta property="og:image" content="../assets/kit-3d.jpg">
+<meta property="og:description" content="A curated collection of sounds used in real productions. €29.99.">
+<meta property="og:image" content="../assets/kit-3d.png">
 
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
   color-scheme: light;
-  --ink:#0d0d0d; --paper:#ffffff; --ink-2:#565656; --ink-3:#6d6d6d; --line:#e8e8e8;
+  --ink:#0d0d0d; --paper:#ffffff; --ink-2:#565656; --ink-3:#6d6d6d;
+  --line:#e8e8e8; --card:#f6f6f6;
   --ease:cubic-bezier(.22,.61,.21,1); --wrap:1160px;
 }
 @media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth;} }
@@ -34,61 +35,76 @@ ul{list-style:none;}
 :focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:2px;}
 .container{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(20px,5vw,48px);}
 .sqz{display:inline-block; transform:scaleX(.92); transform-origin:left center;}
+.heading{font-weight:800; font-size:clamp(2rem,5.5vw,3.4rem); line-height:.95; letter-spacing:-.035em; text-transform:uppercase;}
+.eyebrow{font-size:11px; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-3);}
 
 /* nav */
 .nav{position:sticky; top:0; z-index:60; background:rgba(255,255,255,.9);
   -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--line);}
-.nav__inner{display:flex; align-items:center; gap:clamp(14px,3vw,34px); padding-block:15px;}
+.nav__inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:15px;}
 .wordmark{font-weight:800; font-size:18px; letter-spacing:-.03em; white-space:nowrap;}
-.nav__links{display:flex; align-items:center; gap:clamp(16px,3vw,36px); margin-left:auto;}
-.nav__links a{font-size:13px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--ink-2); padding-block:6px; position:relative;}
-.nav__links a:hover{color:var(--ink);}
-@media (max-width:560px){
-  .nav__inner{flex-wrap:wrap; row-gap:4px;}
-  .nav__links{width:100%; margin-left:0; justify-content:space-between; gap:10px;}
-  .nav__links a{font-size:12px; letter-spacing:.08em;}
-}
+.nav__tag{font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3);}
 
-/* breadcrumb */
-.crumb{padding-top:clamp(1.6rem,4vw,2.6rem);}
-.crumb a{font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
-.crumb a:hover{color:var(--ink);}
-
-/* product */
-.product{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:clamp(2rem,6vw,5rem); align-items:center;
-  padding-block:clamp(2.4rem,6vw,4.5rem);
-}
-.product__art{background:#0c0c0c; overflow:hidden;}
-.product__art img{width:100%; height:auto;}
-.flag{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.24em;
-  text-transform:uppercase; color:var(--ink-3); margin-bottom:16px;}
-.product__title{font-weight:800; font-size:clamp(2.2rem,6vw,3.6rem); line-height:.95;
-  letter-spacing:-.035em; text-transform:uppercase;}
-.product__desc{margin-top:18px; max-width:44ch; color:var(--ink-2); font-size:16px;}
-.features{margin-top:24px; display:flex; flex-direction:column; gap:10px; max-width:44ch;}
-.features li{display:flex; align-items:flex-start; gap:12px; font-size:14.5px; color:var(--ink);}
-.features li::before{content:""; flex:none; width:7px; height:7px; margin-top:8px;
-  background:var(--ink); border-radius:50%;}
-.price{margin-top:26px; font-weight:800; font-size:clamp(1.6rem,4vw,2.2rem);
-  letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
-.buy{display:inline-flex; align-items:center; gap:12px; margin-top:20px;
+/* hero */
+.hero{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(2rem,6vw,5rem); align-items:center; padding-block:clamp(2.6rem,6vw,4.8rem);}
+.hero__art{display:flex; align-items:center; justify-content:center;}
+.hero__art img{width:100%; max-width:460px; height:auto;}   /* transparent 3D box on white — no frame */
+.hero__title{font-weight:800; font-size:clamp(2.4rem,6vw,4rem); line-height:.95; letter-spacing:-.04em; text-transform:uppercase;}
+.hero__lead{margin-top:16px; max-width:40ch; color:var(--ink-2); font-size:16.5px;}
+.hero__credits-label{margin-top:26px; font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3);}
+.hero__credits{margin-top:6px; font-size:14px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
+.hero__price{margin-top:24px; font-weight:800; font-size:clamp(1.6rem,4vw,2.2rem); letter-spacing:-.02em; font-variant-numeric:tabular-nums;}
+.btn{display:inline-flex; align-items:center; gap:12px; margin-top:20px;
   background:var(--ink); color:var(--paper); border:1px solid var(--ink);
-  padding:17px 34px; font-size:14px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:16px 32px; font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
   transition:background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);}
-.buy:hover{background:var(--paper); color:var(--ink); transform:translateY(-2px);}
-.buy .arw{transition:transform .25s var(--ease);}
-.buy:hover .arw{transform:translateX(5px);}
-.buy-note{margin-top:14px; font-size:12px; letter-spacing:.04em; color:var(--ink-3);}
+.btn:hover{background:var(--paper); color:var(--ink); transform:translateY(-2px);}
+.btn .arw{transition:transform .25s var(--ease);}
+.btn:hover .arw{transform:translateX(5px);}
+.hero__note{margin-top:14px; font-size:12px; letter-spacing:.04em; color:var(--ink-3);}
 @media (max-width:760px){
-  .product{grid-template-columns:1fr; gap:clamp(1.6rem,6vw,2.4rem);}
-  .product__art{max-width:460px; margin-inline:auto; width:100%;}
+  .hero{grid-template-columns:1fr; gap:clamp(1.6rem,6vw,2.4rem); text-align:left;}
+  .hero__art{order:-1;}
+  .hero__art img{max-width:300px;}
 }
+
+/* section */
+.section{padding-block:clamp(3rem,7vw,5rem); border-top:1px solid var(--line);}
+.section__head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:clamp(1.8rem,4vw,2.6rem);}
+
+/* kit contents grid */
+.contents{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(10px,1.6vw,16px);}
+.cell{background:var(--card); padding:clamp(1.2rem,2.5vw,1.8rem); display:flex; flex-direction:column; gap:8px;}
+.cell__n{font-weight:800; font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
+.cell__l{font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--ink-2);}
+@media (max-width:720px){ .contents{grid-template-columns:repeat(2,1fr);} }
+
+/* no filler quote */
+.quote{max-width:24ch;}
+.quote__big{font-weight:800; font-size:clamp(2rem,5.5vw,3.4rem); line-height:.95; letter-spacing:-.035em; text-transform:uppercase;}
+.quote__text{margin-top:20px; max-width:52ch; font-size:clamp(1.05rem,2vw,1.35rem); line-height:1.5; color:var(--ink-2);}
+
+/* all kits */
+.kits-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(16px,2.4vw,26px);}
+@media (max-width:760px){ .kits-grid{grid-template-columns:1fr; max-width:340px;} }
+.kitcard{display:block;}
+.kitcard__cover{aspect-ratio:1/1; background:#fff; border:1px solid var(--line); overflow:hidden;}
+.kitcard__cover img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease);}
+.kitcard:hover .kitcard__cover img{transform:scale(1.03);}
+.kitcard__title{margin-top:14px; font-size:14px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;}
+.kitcard__price{margin-top:4px; font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums;}
+.kitcard__view{margin-top:8px; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
+.kitcard:hover .kitcard__view{color:var(--ink);}
+
+/* bottom cta */
+.cta{border:1px solid var(--line); text-align:center; padding:clamp(2.6rem,6vw,4.2rem) clamp(1.2rem,4vw,2rem); margin-block:clamp(3rem,7vw,5rem);}
+.cta__title{font-weight:800; font-size:clamp(2rem,6vw,3.4rem); line-height:.95; letter-spacing:-.04em; text-transform:uppercase;}
+.cta__price{margin-top:14px; font-weight:800; font-size:clamp(1.3rem,3vw,1.7rem); font-variant-numeric:tabular-nums;}
+.cta .btn{margin-top:22px;}
 
 /* footer */
-.footer{border-top:1px solid var(--line); padding-block:28px; margin-top:clamp(2rem,5vw,3rem);}
+.footer{border-top:1px solid var(--line); padding-block:28px;}
 .footer__inner{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
 .footer__legal{display:flex; gap:24px;}
 .footer__legal a{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
@@ -101,39 +117,88 @@ ul{list-style:none;}
 <header class="nav">
   <div class="container nav__inner">
     <a class="wordmark" href="../" aria-label="madein2k — home"><span class="sqz">madein2k</span></a>
-    <nav class="nav__links" aria-label="Main">
-      <a href="../#about">About</a>
-      <a href="../#credits">Credits</a>
-      <a href="../#kits">Kits</a>
-      <a href="../#contact">Contact</a>
-    </nav>
+    <span class="nav__tag">Exclusive drum kit</span>
   </div>
 </header>
 
-<main class="container">
-  <p class="crumb"><a href="../#kits">&larr; Back to kits</a></p>
-
-  <article class="product">
-    <div class="product__art">
-      <img src="../assets/kit-3d.jpg" width="900" height="1350" alt="2K Stash Vol. 1 — 3D box artwork, white box with bold 2K logo and Parental Advisory mark.">
+<main>
+  <!-- HERO -->
+  <section class="container hero">
+    <div class="hero__art">
+      <img src="../assets/kit-3d.png" width="760" height="1140" alt="2K Stash Vol. 1 — 3D box artwork, white box with bold 2K logo and Parental Advisory mark.">
     </div>
-    <div class="product__info">
-      <span class="flag">Current release · Drum kit</span>
-      <h1 class="product__title"><span class="sqz">2K Stash Vol.&nbsp;1</span></h1>
-      <p class="product__desc">Drums, one-shots and textures pulled straight from the original sessions behind the records. One kit, no filler.</p>
-      <ul class="features">
-        <li>Drums, one-shots &amp; textures from real sessions</li>
-        <li>Ready to drop into any DAW</li>
-        <li>One-time purchase · instant download</li>
-      </ul>
-      <p class="price">&euro;29.99</p>
-      <!-- loops straight into the PayHip checkout (no extra "buy" click) -->
-      <a class="buy" href="https://payhip.com/buy?s=1&amp;qty[iAxzd]=1&amp;cart_links[]=iAxzd" target="_blank" rel="noopener noreferrer">
-        Buy now — &euro;29.99 <span class="arw" aria-hidden="true">&rarr;</span>
+    <div class="hero__info">
+      <h1 class="hero__title"><span class="sqz">Stash Vol.&nbsp;1</span></h1>
+      <p class="hero__lead">A curated collection of sounds used in real productions.</p>
+      <p class="hero__credits-label">Production credits include</p>
+      <p class="hero__credits">Luciano · Sosa La M · Thizzy52 · + more</p>
+      <p class="hero__price">&euro;29.99</p>
+      <!-- loops straight into the PayHip checkout (no extra buy click) -->
+      <a class="btn" href="https://payhip.com/buy?s=1&amp;qty[iAxzd]=1&amp;cart_links[]=iAxzd" target="_blank" rel="noopener noreferrer">
+        Get the kit <span class="arw" aria-hidden="true">&rarr;</span>
       </a>
-      <p class="buy-note">Secure checkout via PayHip. Instant download after purchase.</p>
+      <p class="hero__note">Secure checkout via PayHip · Instant download.</p>
     </div>
-  </article>
+  </section>
+
+  <!-- KIT CONTENTS -->
+  <section class="section">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="heading"><span class="sqz">Kit Contents</span></h2>
+        <span class="eyebrow">100 high-end sounds</span>
+      </div>
+      <div class="contents">
+        <div class="cell"><span class="cell__n">16</span><span class="cell__l">808s &amp; Bass</span></div>
+        <div class="cell"><span class="cell__n">16</span><span class="cell__l">Claps &amp; Snaps</span></div>
+        <div class="cell"><span class="cell__n">6</span><span class="cell__l">FX</span></div>
+        <div class="cell"><span class="cell__n">12</span><span class="cell__l">HiHats</span></div>
+        <div class="cell"><span class="cell__n">7</span><span class="cell__l">Kicks</span></div>
+        <div class="cell"><span class="cell__n">6</span><span class="cell__l">Open Hats</span></div>
+        <div class="cell"><span class="cell__n">24</span><span class="cell__l">Percs &amp; more</span></div>
+        <div class="cell"><span class="cell__n">13</span><span class="cell__l">Snares</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NO FILLER -->
+  <section class="section">
+    <div class="container">
+      <h2 class="quote__big"><span class="sqz">No filler.</span></h2>
+      <p class="quote__text">“Every sound in this kit was personally selected from my actual production library and used in real productions.”</p>
+    </div>
+  </section>
+
+  <!-- ALL KITS -->
+  <section class="section">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="heading"><span class="sqz">All Kits</span></h2>
+        <span class="eyebrow">More volumes coming</span>
+      </div>
+      <div class="kits-grid">
+        <a class="kitcard" href="./" aria-label="2K Stash Vol. 1 — view kit">
+          <div class="kitcard__cover">
+            <img src="../assets/kit-cover.jpg" width="900" height="900" alt="2K Stash Vol. 1 — cover artwork" loading="lazy">
+          </div>
+          <p class="kitcard__title">2K Stash Vol. 1</p>
+          <p class="kitcard__price">&euro;29.99</p>
+          <p class="kitcard__view">View kit &rarr;</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="container">
+    <div class="cta">
+      <h2 class="cta__title"><span class="sqz">2K Stash Vol.&nbsp;1</span></h2>
+      <p class="cta__price">&euro;29.99</p>
+      <a class="btn" href="https://payhip.com/buy?s=1&amp;qty[iAxzd]=1&amp;cart_links[]=iAxzd" target="_blank" rel="noopener noreferrer">
+        Get the kit <span class="arw" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
