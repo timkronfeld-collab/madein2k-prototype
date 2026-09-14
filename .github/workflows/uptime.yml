@@ -1,0 +1,102 @@
+name: Uptime check
+
+# Prueft alle 6 Stunden, ob madein2k.com wirklich ausgeliefert wird.
+# Hintergrund: Die Seite war vom 07.09. bis 14.09.2026 unbemerkt offline,
+# weil das Repo auf privat stand und GitHub Pages dadurch depubliziert wurde.
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  PRIMARY: https://madein2k.com/
+  FALLBACK: https://timkronfeld-collab.github.io/madein2k-prototype/
+  MARKER: madein2k
+  ISSUE_TITLE: "madein2k.com ist nicht erreichbar"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Seite abrufen
+        id: probe
+        run: |
+          set +e
+          probe() {
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' -m 30 -L "$1")
+            echo "$1 -> HTTP $code"
+            if [ "$code" != "200" ]; then return 1; fi
+            if ! grep -qi "$MARKER" /tmp/body; then
+              echo "  200, aber '$MARKER' fehlt im Inhalt — falsche Seite?"
+              return 1
+            fi
+            return 0
+          }
+          echo "## Uptime" >> "$GITHUB_STEP_SUMMARY"
+          if probe "$PRIMARY"; then
+            echo "primary=ok" >> "$GITHUB_OUTPUT"
+            echo "- Primary $PRIMARY: **OK**" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "primary=down" >> "$GITHUB_OUTPUT"
+            echo "- Primary $PRIMARY: **DOWN**" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if probe "$FALLBACK"; then
+            echo "fallback=ok" >> "$GITHUB_OUTPUT"
+            echo "- Fallback $FALLBACK: OK" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "fallback=down" >> "$GITHUB_OUTPUT"
+            echo "- Fallback $FALLBACK: DOWN" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Heartbeat (haelt den Cron am Leben)
+        # GitHub schaltet geplante Workflows in oeffentlichen Repos nach 60 Tagen
+        # ohne Repo-Aktivitaet ab. Alle ~30 Tage ein Commit verhindert das.
+        run: |
+          last=$(git log -1 --format=%ct)
+          age=$(( ( $(date +%s) - last ) / 86400 ))
+          echo "Letzter Commit vor $age Tagen"
+          if [ "$age" -ge 30 ]; then
+            mkdir -p .monitor
+            date -u +"%Y-%m-%dT%H:%M:%SZ" > .monitor/last-heartbeat
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .monitor/last-heartbeat
+            git commit -m "Heartbeat: keep scheduled uptime check enabled"
+            git push
+          fi
+
+      - name: Alarm ausloesen
+        if: steps.probe.outputs.primary == 'down'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list --state open --search "\"$ISSUE_TITLE\" in:title" --json number --jq '.[0].number')
+          body="Der Uptime-Check hat um $(date -u +'%Y-%m-%d %H:%M UTC') festgestellt, dass **$PRIMARY** nicht ausgeliefert wird.
+
+          - Primary: ${{ steps.probe.outputs.primary }}
+          - Fallback (github.io): ${{ steps.probe.outputs.fallback }}
+
+          Haeufigste Ursache: Repo steht auf privat (Pages wird auf dem Free-Plan dann depubliziert) oder die Custom Domain haengt nicht mehr am Repo.
+          Lauf-Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing ist bereits offen — kein Spam."
+          else
+            gh issue create --title "$ISSUE_TITLE" --body "$body"
+          fi
+          exit 1
+
+      - name: Entwarnung
+        if: steps.probe.outputs.primary == 'ok'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list --state open --search "\"$ISSUE_TITLE\" in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "Wieder erreichbar: $PRIMARY liefert HTTP 200 mit erwartetem Inhalt."
+          fi
