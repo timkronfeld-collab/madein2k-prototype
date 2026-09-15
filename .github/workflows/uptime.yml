@@ -28,15 +28,26 @@ jobs:
         id: probe
         run: |
           set +e
+          # WICHTIG: GitHubs CDN cacht pro Accept-Encoding getrennt (Vary: Accept-Encoding).
+          # Am 15.09.2026 klebte in der gzip-Variante ein alter 404, waehrend die
+          # Variante ohne Accept-Encoding sauber 200 lieferte — ein Check ohne gzip
+          # haette gruen gemeldet, obwohl JEDER Browser die kaputte Variante sah.
+          # Darum jede URL in beiden Varianten pruefen.
           probe() {
-            code=$(curl -sS -o /tmp/body -w '%{http_code}' -m 30 -L "$1")
-            echo "$1 -> HTTP $code"
-            if [ "$code" != "200" ]; then return 1; fi
-            if ! grep -qi "$MARKER" /tmp/body; then
-              echo "  200, aber '$MARKER' fehlt im Inhalt — falsche Seite?"
-              return 1
-            fi
-            return 0
+            ok=0
+            for enc in "gzip, deflate, br" "identity"; do
+              code=$(curl -sS -o /tmp/body -w '%{http_code}' -m 30 -L \
+                     -H "Accept-Encoding: $enc" --compressed "$1")
+              echo "$1 [Accept-Encoding: $enc] -> HTTP $code"
+              if [ "$code" != "200" ]; then
+                echo "  FEHLER: Statuscode $code"
+                ok=1
+              elif ! grep -qi "$MARKER" /tmp/body; then
+                echo "  FEHLER: 200, aber '$MARKER' fehlt im Inhalt"
+                ok=1
+              fi
+            done
+            return $ok
           }
           echo "## Uptime" >> "$GITHUB_STEP_SUMMARY"
           if probe "$PRIMARY"; then
